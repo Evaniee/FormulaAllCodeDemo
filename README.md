@@ -1,6 +1,6 @@
 # Formula AllCode Demo
 A streamlined and simplified way of interacting with the Formula AllCode robots from [Matrix TSL](https://www.matrixtsl.com/).  
-Used for the College of West Anglia Staff Conference on the 31st of March 2023.  
+Used for the [College of West Anglia](https://cwa.ac.uk/) Staff Conference on the 31st of March 2023.  
 ## Available Commands
 ### Special Modes
 * Manual  
