@@ -52,7 +52,7 @@ namespace FormulaAllCode
         /// </summary>
         static void Manual()
         {
-            Console.Write("Entering User Control Mode. Press \'Escape\' to exit: ");
+            Console.Write("Entering Manual Mode. Press \'Escape\' to exit: ");
             bool loop = true;
             while (loop)
             {
