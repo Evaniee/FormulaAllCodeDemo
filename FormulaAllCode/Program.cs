@@ -7,34 +7,49 @@ namespace FormulaAllCode
 {
     class Program
     {
-        static char portNumber;
-        static readonly byte MAX_SPEED = 100;
-        static readonly uint MAX_DISTANCE = 10_000;
+        /*
+         *  Commands:
+         *      Special Modes:
+         *          Manual();                                   - Contol the robot using WASD or arrow keys
+         *          DragStrip();                                - Make the robot move forward at any speed, individual motor control is possible, moves on spacebar press
+         *              DragStrip(time, speed)                  - Make the robot move forward at the listed speed for listed time
+         *              DragStrip(time, leftSpeed, rightSpeed)  - Make the robot move forward at the listed speed for listed time
+         *      Movement:
+         *          Forward();                                  - Make the robot move forward
+         *              Forward(distance);                      - Make the robot move forward a given distance
+         *          Backward();                                 - Make the robot move backward
+         *              Backward(distance);                     - Make the robot move backward a given distance
+         *          Left();                                     - Make the robot turn 45 degrees left
+         *              Left(angle);                            - Make the robot turn left by given angle
+         *          Right();                                    - Make the robot turn 45 degrees right
+         *              Right(angle);                           - Make the robot turn right by a given angle
+         */
 
-        static void Setup()
+        static void Main(string[] args)
         {
-            // Get User's port number via input
-            Console.Write("What is your port number: ");
-            byte portNumberByte;
-            while (!byte.TryParse(Console.ReadLine(), out portNumberByte))
-                Console.WriteLine("Retry with a valid port number.");
-            portNumber = (char)portNumberByte;
+            Setup(4);        // You need this to make your robot start
+            // Your code starts below here!
 
-            // Open Port
-            FA_DLL.FA_ComOpen(portNumber);
-
-            //while (Console.ReadKey(true).Key != ConsoleKey.Escape)
-            {
-                // Playnote Test
-                FA_DLL.FA_PlayNote(portNumber, 500, 100);
-                FA_DLL.FA_PlayNote(portNumber, 100, 100);
-                FA_DLL.FA_PlayNote(portNumber, 600, 100);
-            }
+            // And ends above here
+            Shutdown();     // You need this to stop the robot without turning it off (if it all goes correct)
+            Console.ReadKey(true);
         }
 
-        static void SelfControl()
+        #region You can ignore all this below unless you're interested in the details
+
+        #region Variables
+        static char port;                     // port number for bluetooth communication
+        static readonly byte MAX_SPEED = 100;       // Maximum speed the robot can move at
+        static readonly uint MAX_TIME = 10_000;     // Maximum time the robot can move for
+        #endregion
+
+        #region Special Modes
+        /// <summary>
+        /// Allow the user to manually move the robot using WASD or arrow keys
+        /// </summary>
+        static void Manual()
         {
-            Console.WriteLine("Entering User Control Mode");
+            Console.Write("Entering User Control Mode. Press \'Escape\' to exit: ");
             bool loop = true;
             while (loop)
             {
@@ -42,100 +57,219 @@ namespace FormulaAllCode
                 {
                     case ConsoleKey.W:
                     case ConsoleKey.UpArrow:
-                        FA_DLL.FA_Forwards(portNumber, 100);
+                        Forward();
                         break;
                     case ConsoleKey.S:
                     case ConsoleKey.DownArrow:
-                        FA_DLL.FA_Backwards(portNumber, 100);
+                        Backward();
                         break;
                     case ConsoleKey.A:
                     case ConsoleKey.LeftArrow:
-                        FA_DLL.FA_Left(portNumber, 45);
+                        Left();
                         break;
                     case ConsoleKey.D:
                     case ConsoleKey.RightArrow:
-                        FA_DLL.FA_Right(portNumber, 45);
+                        Right();
                         break;
                     case ConsoleKey.Escape:
                         loop = false;
+                        Console.WriteLine("Esc");
                         break;
                 }
             }
         }
 
+        /// <summary>
+        /// Move the robot forward at a given speed for a given time
+        /// </summary>
         static void DragStrip()
         {
-            byte speed;
-            Console.Write("Enter speed: ");
-            while (!byte.TryParse(Console.ReadLine(), out speed) || speed > MAX_SPEED)
-                Console.WriteLine("Retry with a valid speed (0 - {0}).", MAX_SPEED);
-            FA_DLL.FA_SetMotors(portNumber, speed, speed);
-            Console.WriteLine("Speed Set to {0}", speed);
+            // Ask user if they want seperate motor speeds
+            Console.WriteLine("Do you want both motors at the same speed?: ");
+            byte leftSpeed = 0;
+            byte rightSpeed = 0;
+            bool loop = true;
+            while (loop)
+            {
+                switch (Console.ReadKey(true).Key)
+                {
+                    case ConsoleKey.N:
+                        leftSpeed = GetSpeed("left");
+                        rightSpeed = GetSpeed("right");
+                        loop = false;
+                        break;
+                    case ConsoleKey.Y:
+                        leftSpeed = GetSpeed("motor");
+                        rightSpeed = leftSpeed;
+                        loop = false;
+                        break;
+                }
+            }
 
-            uint distance;
-            Console.Write("Enter distance (Max {0}): ", MAX_DISTANCE);
-            while (!uint.TryParse(Console.ReadLine(), out distance) || distance > MAX_DISTANCE)
-                Console.WriteLine("Retry with a valid distance (0 - {0}).", MAX_DISTANCE);
-            Console.WriteLine("Distance Set to {0}", distance);
+            // Get the distance the User wants to travel
+            uint time;
+            Console.Write("Enter time to move (Max {0}): ", MAX_TIME);
+            while (!uint.TryParse(Console.ReadLine(), out time) || time > MAX_TIME)
+                Console.WriteLine("Retry with a valid distance (0 - {0}).", MAX_TIME);
+            Console.WriteLine("Distance Set to {0}", time);
 
+            // Hold until spacebar press
             Console.WriteLine("Press Spacebar to go");
             while (Console.ReadKey(true).Key != ConsoleKey.Spacebar) ;
-            FA_DLL.FA_Forwards(portNumber, distance);
+
+            DragStrip(time, leftSpeed, rightSpeed);
         }
 
-        static void Shutdown()
+        /// <summary>
+        /// Move the robot forward at a given speed for a given time
+        /// </summary>
+        /// <param name="time">Time to move for</param>
+        /// <param name="speed">Speed to move at</param>
+        static void DragStrip(uint time, int speed)
         {
-            FA_DLL.FA_ComClose(portNumber);
+            DragStrip(time, speed, speed);
         }
 
-        static void Main(string[] args)
+        /// <summary>
+        /// Move the robot forward at a given speed for a given time
+        /// </summary>
+        /// <param name="time">Time to move for</param>
+        /// <param name="leftSpeed">Speed to move left</param>
+        /// <param name="rightSpeed">Speed to move right</param>
+        static void DragStrip(uint time, int leftSpeed, int rightSpeed)
         {
-            Setup();
-            SelfControl();
-            //DragStrip();
+            FA_DLL.FA_SetMotors(port, leftSpeed, rightSpeed);
+            Thread.Sleep((int)time);
+            FA_DLL.FA_SetMotors(port, 0, 0);
+        }
+        #endregion
+
+        #region General
+        /// <summary>
+        /// Setup the robot to accept commands
+        /// </summary>
+        private static void Setup()
+        {
+            // Get User's port number via input
+            Console.Write("What is your port number: ");
+            byte port;
+            while (!byte.TryParse(Console.ReadLine(), out port))
+                Console.WriteLine("Retry with a valid port number.");
+            Setup(port);
+        }
+
+        /// <summary>
+        /// Setup the robot to accept commands
+        /// </summary>
+        /// <param name="portNumber">The number of the robot's port</param>
+        private static void Setup(int portNumber)
+        {
+            port = (char)portNumber;
+
+            // Open port
+            FA_DLL.FA_ComOpen(port);
+
+            // Short noise to inform user the robot is online
+            FA_DLL.FA_PlayNote(port, 500, 100);
+            FA_DLL.FA_PlayNote(port, 100, 100);
+            FA_DLL.FA_PlayNote(port, 600, 100);
+        }
+
+        /// <summary>
+        /// Shutdown the robot
+        /// </summary>
+        private static void Shutdown()
+        {
+            FA_DLL.FA_ComClose(port);
+        }
+        #endregion
+
+        #region Movement
+        /// <summary>
+        /// Make the Robot move forwards
+        /// </summary>
+        private static void Forward()
+        {
             Forward(100);
-            Shutdown();
-            Console.ReadKey(true);
-        }     
-           
-        static void Forward(uint distance)
-        {
-            FA_DLL.FA_Forwards(portNumber, distance);
         }
+
+        /// <summary>
+        /// Make the Robot move forwards
+        /// </summary>
+        /// <param name="distance">Distance to move forwards</param>
+        private static void Forward(uint distance)
+        {
+            FA_DLL.FA_Forwards(port, distance);
+        }
+
+        /// <summary>
+        /// Make the Robot move backwards
+        /// </summary>
+        private static void Backward()
+        {
+            Backward(100);
+        }
+
+        /// <summary>
+        /// Make the Robot move backwards
+        /// </summary>
+        /// <param name="distance">Distance to move backwards</param>
+        private static void Backward(uint distance)
+        {
+            FA_DLL.FA_Backwards(port, distance);
+        }
+
+        /// <summary>
+        /// Make the Robot turn left
+        /// </summary>
+        private static void Left()
+        {
+            Left(45);
+        }
+
+        /// <summary>
+        /// Make the Robot turn left
+        /// </summary>
+        /// <param name="distance">Distance to turn left</param>
+        private static void Left(uint angle)
+        {
+            FA_DLL.FA_Left(port, angle);
+        }
+
+        /// <summary>
+        /// Make the Robot turn right
+        /// </summary>
+        private static void Right()
+        {
+            Right(45);
+        }
+
+        /// <summary>
+        /// Make the Robot ture right
+        /// </summary>
+        /// <param name="angle">Angle to turn right</param>
+        private static void Right(uint angle)
+        {
+            FA_DLL.FA_Right(port, angle);
+        }
+        #endregion
+
+        #region Generic Commands
+        /// <summary>
+        /// Ask the user for a speed
+        /// </summary>
+        /// <param name="type">Type of speed to ask for</param>
+        /// <returns>Speed given by user</returns>
+        private static byte GetSpeed(string type)
+        {
+            // Get the speed the User wants to travel at
+            byte speed;
+            Console.Write("Enter {0} speed: ", type);
+            while (!byte.TryParse(Console.ReadLine(), out speed) || speed > MAX_SPEED)
+                Console.WriteLine("Retry with a valid speed (0 - {0}).", MAX_SPEED);
+            return speed;
+        }
+        #endregion
+        #endregion
     }
 }
-
-#region Adam's Old Stuff
-//bool quit = false;
-//do
-//{
-//    Console.WriteLine("What do you want me to do?");
-//    Console.WriteLine("A: Draw a House, B: Follow a Black line, C: Maze Runner");
-//    string option = Console.ReadLine();
-
-//    switch (option)
-//    {
-//        case "A":
-//        case "a":
-//            HouseDrawtest house = new HouseDrawtest();
-//            house.House();
-//            break;
-//        case "B":
-//        case "b":
-//            FollowTheLine line = new FollowTheLine();
-//            line.RaceTrack();
-//            break;
-//        case "C":
-//        case "c":
-//            mazeRunner runner = new mazeRunner();
-//            runner.MazeRunner();
-//            break;
-//        case "0":
-//            quit = true;
-//            break;
-//        default:
-//            Console.WriteLine("Invalid choice!");
-//            break;
-//    }
-//} while (quit == false);
-#endregion
