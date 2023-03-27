@@ -27,12 +27,15 @@ namespace FormulaAllCode
 
         static void Main(string[] args)
         {
-            Setup(4);        // You need this to make your robot start
+            Setup();        // You need this to make your robot start. If you know your port number you can enter it inside the brackets.
+
             // Your code starts below here!
 
-            // And ends above here
-            Shutdown();     // You need this to stop the robot without turning it off (if it all goes correct)
-            Console.ReadKey(true);
+            Manual();       // You can replace me too!
+
+            // And ends above here!
+
+            Shutdown();     // You need this to stop the robot without turning it off. (If it all goes correct, sometimes you need to hit the physical power button.)
         }
 
         #region You can ignore all this below unless you're interested in the details

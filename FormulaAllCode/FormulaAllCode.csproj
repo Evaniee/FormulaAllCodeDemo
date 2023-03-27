@@ -60,9 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FA_DLL.cs" />
-    <Compile Include="FollowTheLine.cs" />
-    <Compile Include="HouseDrawtest.cs" />
-    <Compile Include="mazeRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
