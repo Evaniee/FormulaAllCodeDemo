@@ -18,6 +18,19 @@ Used for the [College of West Anglia](https://cwa.ac.uk/) Staff Conference on th
 6. Now you have your outgoing port number you can run the program normally and enter your port number when asked. You should hear a noise from the robot and a message saying you have been placed in Manual mode and can move around using the WASD or arrow keys.
 	* If you want to skip entering this in every time you run the program enter your port number inside the brackets in the line that says `Setup();`.
 ## Available Commands
+### Required:
+* Setup
+	* Setup the robot to accept commands.
+	* You can Setup the robot using the following commands:
+		* `Setup();`
+			* Requests Port Number from user via console to use for communication
+		* `Setup(port);`
+			* Use the port given as parameter for communication
+		* `Setup(port, silent)`;
+			* Use the port given as parameter for communication, will launch without a sound if 'silent' is 'true'
+* Shutdown
+	* Stop the robot receiving commands.
+	* You can stop the robot receving commands using `Shutdown();`
 ### Special Modes
 * Manual  
   * Control the Robot using WASD or the arrow keys until the Escape key is pressed.  
