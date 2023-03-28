@@ -32,7 +32,7 @@ namespace FormulaAllCode
 
         static void Main(string[] args)
         {
-            Setup(10,true);        // You need this to make your robot start. If you know your port number you can enter it inside the brackets.
+            Setup();        // You need this to make your robot start. If you know your port number you can enter it inside the brackets.
 
             // Your code starts below here!
 
