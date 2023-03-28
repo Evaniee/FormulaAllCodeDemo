@@ -36,10 +36,7 @@ namespace FormulaAllCode
 
             // Your code starts below here!
 
-            // Manual();       // You can replace me too!
-            Forward(100);
-            Right(180);
-            Forward(100);
+            Manual();       // You can replace me too!
 
             // And ends above here!
             Shutdown();     // You need this to stop the robot without turning it off. (If it all goes correct, sometimes you need to hit the physical power button.)
