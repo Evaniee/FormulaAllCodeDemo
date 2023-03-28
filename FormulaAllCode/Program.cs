@@ -9,6 +9,11 @@ namespace FormulaAllCode
     {
         /*
          *  Commands:
+         *      Required:
+         *          Setup();                                    - Setup the robot to recieve commands
+         *              Setup(port);                            - Setup the robot to recieve commands on a given port
+         *              Setup(port, silent);                    - Setup the robot to recieve commands on a given port using silent mode if 'silent' is 'true' otherwise must be 'false'
+         *          Shutdown();                                 - Stop the robot recieving commands
          *      Special Modes:
          *          Manual();                                   - Contol the robot using WASD or arrow keys
          *          DragStrip();                                - Make the robot move forward at any speed, individual motor control is possible, moves on spacebar press
@@ -27,14 +32,16 @@ namespace FormulaAllCode
 
         static void Main(string[] args)
         {
-            Setup();        // You need this to make your robot start. If you know your port number you can enter it inside the brackets.
+            Setup(10,true);        // You need this to make your robot start. If you know your port number you can enter it inside the brackets.
 
             // Your code starts below here!
 
-            Manual();       // You can replace me too!
+            // Manual();       // You can replace me too!
+            Forward(100);
+            Right(180);
+            Forward(100);
 
             // And ends above here!
-
             Shutdown();     // You need this to stop the robot without turning it off. (If it all goes correct, sometimes you need to hit the physical power button.)
         }
 
@@ -176,6 +183,27 @@ namespace FormulaAllCode
             FA_DLL.FA_PlayNote(port, 500, 100);
             FA_DLL.FA_PlayNote(port, 100, 100);
             FA_DLL.FA_PlayNote(port, 600, 100);
+        }
+
+        /// <summary>
+        /// Setup the robot to accept commands
+        /// </summary>
+        /// <param name="portNumber">The number of the robot's port</param>
+        /// <param name="silent">Does the robot play a noise on startup</param>
+        private static void Setup(int portNumber, bool silent)
+        {
+            port = (char)portNumber;
+
+            // Open port
+            FA_DLL.FA_ComOpen(port);
+
+            // Short noise to inform user the robot is online if not silent
+            if (!silent)
+            {
+                FA_DLL.FA_PlayNote(port, 500, 100);
+                FA_DLL.FA_PlayNote(port, 100, 100);
+                FA_DLL.FA_PlayNote(port, 600, 100);
+            }
         }
 
         /// <summary>
