@@ -48,6 +48,8 @@ namespace FormulaAllCode
         static char port;                     // port number for bluetooth communication
         static readonly byte MAX_SPEED = 100;       // Maximum speed the robot can move at
         static readonly uint MAX_TIME = 10_000;     // Maximum time the robot can move for
+        static readonly unit DISTANCE = 50;        // Default distance robot will move
+        static readonly unit ANGLE = 20;            // Default angle robot will turn
         #endregion
 
         #region Special Modes
@@ -218,7 +220,7 @@ namespace FormulaAllCode
         /// </summary>
         private static void Forward()
         {
-            Forward(100);
+            Forward(DISTANCE);
         }
 
         /// <summary>
@@ -235,7 +237,7 @@ namespace FormulaAllCode
         /// </summary>
         private static void Backward()
         {
-            Backward(100);
+            Backward(DISTANCE);
         }
 
         /// <summary>
@@ -252,7 +254,7 @@ namespace FormulaAllCode
         /// </summary>
         private static void Left()
         {
-            Left(45);
+            Left(ANGLE);
         }
 
         /// <summary>
@@ -269,7 +271,7 @@ namespace FormulaAllCode
         /// </summary>
         private static void Right()
         {
-            Right(45);
+            Right(ANGLE);
         }
 
         /// <summary>
