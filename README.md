@@ -1,6 +1,5 @@
 # Formula AllCode Demo
-A streamlined and simplified way of interacting with the Formula AllCode robots from [Matrix TSL](https://www.matrixtsl.com/).  
-Used for the [College of West Anglia](https://cwa.ac.uk/) Staff Conference on the 31st of March 2023.  
+A streamlined and simplified way of interacting with the Formula AllCode robots from [Matrix TSL](https://www.matrixtsl.com/).   
 ## Setup (For Windows 10)  
 1. Ensure Bluetooth is turned on.  
 	* Search for 'Bluetooth' in the start menu search bar and select 'Bluetooth & other devices settings'  
