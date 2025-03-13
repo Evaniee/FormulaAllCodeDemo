@@ -14,8 +14,8 @@ A streamlined and simplified way of interacting with the Formula AllCode robots 
 			* You can then find the device that you are paired with, double click it and go to 'Services'. Here you will see which ports your device is using.
 		3. If none of the previous options worked search for 'cmd' in the start menu search bar and enter `rundll32.exe shell32.dll,Control_RunDLL bthprops.cpl,,2 `
 	* You should be able to find the outgoing port using one of these methods. Keep a note of it for the next step.
-6. Now you have your outgoing port number you can run the program normally and enter your port number when asked. You should hear a noise from the robot and a message saying you have been placed in Manual mode and can move around using the WASD or arrow keys.
-	* If you want to skip entering this in every time you run the program enter your port number inside the brackets in the line that says `Setup();`.
+6. Now you have your outgoing port number you can change the value of `PORT` on line 11 of Program.cs and start using the robot.
+7. Only write your code in the `try` block after the call to `FA_Com_Open`. Methods that interact with the robot are found in `FA_DLL.`
 ## Resources used  
 Setup Methodology From: [Formula AllCode Robotics Course](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwi8iN_u9_z9AhWSQ0EAHbhlDUoQFnoECBcQAQ&url=https%3A%2F%2Fwww.matrixtsl.com%2Fresources%2Fgetresource.php%3Fid%3D950&usg=AOvVaw0NPuWYiCmg6-O7ltyILys8) (Download)  
 Code Adapted From: [FA_C#_Formula AllCode C# VS2015](https://www.matrixtsl.com/allcode/resources/)
